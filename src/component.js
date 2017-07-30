@@ -5,8 +5,7 @@ export default class Component extends HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
 
-    this.props = this._resolveProps()
-    console.log(this.props)
+    this.props = this._setupProps()
   }
 
   connectedCallback () {
@@ -32,15 +31,34 @@ export default class Component extends HTMLElement {
     })
   }
 
-  _resolveProps () {
-    const initialProps = {}
+  _setupProps () {
+    const propValues = {}
     const { constructor: Type } = this
     const propTypes = Type.propTypes || {}
-    for (const [key, value] of Object.entries(propTypes)) {
-      const initialValue = value.deserialize(this.getAttribute(key)) || value.defaultValue
-      value.validate(key, initialValue)
-      initialProps[key] = initialValue
+    for (const [name, propType] of Object.entries(propTypes)) {
+      Object.defineProperty(this, name, {
+        configurable: true,
+        enumerable: true,
+        get: function () {
+          return propValues[name]
+        },
+        set: function (value) {
+          propType.validate(name, value)
+          propValues[name] = value
+        }
+      })
+
+      this[name] = this.getInitialValue(name, propType)
     }
-    return initialProps
+  }
+
+  getInitialValue(name, propType) {
+    let initalValue = this.getAttribute(name)
+    if (initalValue === undefined || initalValue === null) {
+      initalValue = propType.defaultValue
+    } else {
+      initalValue = propType.deserialize(initalValue)
+    }
+    return initalValue
   }
 }

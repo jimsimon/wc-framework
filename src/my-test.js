@@ -14,7 +14,7 @@ export default class MyTest extends Component {
 
   render () {
     return (
-      <div><slot/></div>
+      <div><button>Click me</button><slot/>{this.aNumber}</div>
     )
   }
 }

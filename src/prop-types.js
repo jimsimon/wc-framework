@@ -12,11 +12,16 @@ class PropType {
 }
 
 class NumberType extends PropType {
-  validate (name, potentialNumber) {
-    super.validate(name, potentialNumber)
+  validate (name, value) {
+    super.validate(name, value)
 
-    if (potentialNumber !== undefined && potentialNumber !== null && typeof potentialNumber !== 'number') {
-      throw new Error(`Expected a number for property ${name} but received ${typeof potentialNumber}`)
+    if (value !== undefined && value !== null) {
+      if (typeof value !== 'number') {
+        throw new Error(`Expected a number for property ${name} but received ${typeof value}`)
+      }
+      if (isNaN(value)) {
+        throw new Error(`Expected a number for property ${name} but received NaN`)
+      }
     }
   }
 

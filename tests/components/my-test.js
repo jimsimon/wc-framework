@@ -1,7 +1,7 @@
-import Component from './component'
-import PropTypes from './prop-types'
+import Component from '../../src/component'
+import PropTypes from '../../src/prop-types'
 
-export default class MyTest extends Component {
+customElements.define('my-test', class extends Component {
   static propTypes = {
     camelCase: PropTypes.string(),
     aNumber: PropTypes.number({
@@ -17,6 +17,4 @@ export default class MyTest extends Component {
       <div><button>Click me</button><slot/>{this.aNumber}</div>
     )
   }
-}
-
-customElements.define('my-test', MyTest)
+})

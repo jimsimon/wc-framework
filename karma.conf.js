@@ -6,7 +6,7 @@ module.exports = function (config) {
       {pattern: "tests/**/*.test.js", watched: false}
     ],
     preprocessors: {
-      "tests/**/*.js": ["webpack"]
+      "tests/**/*.js": ["webpack", 'sourcemap']
     },
     browsers: ['Chrome'],
     client: {

@@ -18,8 +18,19 @@ module.exports = function (config) {
     singleRun: true,
     webpack: require('./webpack.config'),
     coverageReporter: {
-      type : 'html',
-      dir : 'coverage/'
+      dir : 'coverage/',
+      reporters: [
+        { type: 'html' },
+        { type: 'text-summary' }
+      ],
+      check: {
+        global: {
+          statements: 100,
+          lines: 100,
+          functions: 100,
+          branches: 100
+        }
+      }
     }
   })
 }

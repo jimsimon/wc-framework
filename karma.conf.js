@@ -5,6 +5,7 @@ module.exports = function (config) {
     files: [
       {pattern: "tests/**/*.test.js", watched: false}
     ],
+    reporters: ['progress', 'coverage'],
     preprocessors: {
       "tests/**/*.js": ["webpack", 'sourcemap']
     },
@@ -15,6 +16,10 @@ module.exports = function (config) {
       }
     },
     singleRun: true,
-    webpack: require('./webpack.config')
+    webpack: require('./webpack.config'),
+    coverageReporter: {
+      type : 'html',
+      dir : 'coverage/'
+    }
   })
 }

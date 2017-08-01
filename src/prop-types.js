@@ -5,7 +5,7 @@ class PropType {
   }
 
   validate (name, value) {
-    if (this.required && !value) {
+    if (this.required && (value === undefined || value === null)) {
       throw new Error(`Property ${name} is required but was not specified`)
     }
   }

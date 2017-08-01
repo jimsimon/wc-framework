@@ -10,11 +10,6 @@ module.exports = function (config) {
       "tests/**/*.js": ["webpack", 'sourcemap']
     },
     browsers: ['Chrome'],
-    client: {
-      chai: {
-        includeStack: true
-      }
-    },
     singleRun: true,
     webpack: require('./webpack.config'),
     coverageReporter: {

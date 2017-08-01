@@ -44,7 +44,10 @@ class StringType extends PropType {
   }
 }
 
+export const number = (config) => new NumberType(config)
+export const string = (config) => new StringType(config)
+
 export default {
-  number: (config) => new NumberType(config),
-  string: (config) => new StringType(config)
+  number,
+  string
 }

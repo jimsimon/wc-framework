@@ -8,6 +8,7 @@ export default class Testbed {
 
   beforeEach () {
     this.container = document.createElement('div')
+    document.body.appendChild(this.container)
   }
 
   afterEach () {

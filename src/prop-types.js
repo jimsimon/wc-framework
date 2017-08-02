@@ -2,6 +2,8 @@ class PropType {
   constructor ({required, defaultValue} = {}) {
     this.required = required
     this.defaultValue = defaultValue
+    this.name = null
+    this.attributeName = null
   }
 
   validate (name, value) {

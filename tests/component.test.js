@@ -4,7 +4,18 @@ import './components/my-test'
 describe('Component', function () {
   const testbed = new Testbed()
 
-  it('tests', function () {
-    testbed.render(`<my-test required-prop="test" camel-case="hello" a-number="3"></my-test>`)
+  let element
+  beforeEach(function () {
+    element = testbed.render(`<my-test required-string="test" optional-string="hello" optional-number="3"></my-test>`)
+  })
+
+  it('renders a shadow root', function () {
+    expect(element.shadowRoot).to.be.ok
+  })
+
+  it('sets properties from attributes', function () {
+    expect(element.requiredString).to.eql('test')
+    expect(element.optionalString).to.eql('hello')
+    expect(element.optionalNumber).to.eql(3)
   })
 })

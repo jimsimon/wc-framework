@@ -4,11 +4,11 @@ import PropTypes from '../../src/prop-types'
 customElements.define('my-test', class extends Component {
   static get propTypes() {
     return {
-      camelCase: PropTypes.string(),
-      aNumber: PropTypes.number({
+      optionalString: PropTypes.string(),
+      optionalNumber: PropTypes.number({
         defaultValue: 42
       }),
-      requiredProp: PropTypes.string({
+      requiredString: PropTypes.string({
         required: true
       })
     }
@@ -16,7 +16,13 @@ customElements.define('my-test', class extends Component {
 
   render () {
     return (
-      <div><button>Click me</button><slot/>{this.aNumber}</div>
+      <table>
+        <tbody>
+        <tr><th>optionalString</th>{this.optionalString}</tr>
+        <tr><th>optionalNumber</th>{this.optionalNumber}</tr>
+        <tr><th>requiredString</th>{this.requiredString}</tr>
+        </tbody>
+      </table>
     )
   }
 })

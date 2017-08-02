@@ -18,9 +18,9 @@ customElements.define('my-test', class extends Component {
     return (
       <table>
         <tbody>
-        <tr><th>optionalString</th>{this.optionalString}</tr>
-        <tr><th>optionalNumber</th>{this.optionalNumber}</tr>
-        <tr><th>requiredString</th>{this.requiredString}</tr>
+        <tr><th>optionalString</th><th>{this.optionalString}</th></tr>
+        <tr><th>optionalNumber</th><th>{this.optionalNumber}</th></tr>
+        <tr><th>requiredString</th><th>{this.requiredString}</th></tr>
         </tbody>
       </table>
     )

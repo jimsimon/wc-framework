@@ -17,5 +17,10 @@
       }
     ],
     ["transform-class-properties"]
-  ]
+  ],
+  "env": {
+    "production": {
+      "presets": ["babili"]
+    }
+  }
 }

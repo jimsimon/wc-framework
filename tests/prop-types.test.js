@@ -37,6 +37,24 @@ describe('Prop type', function () {
         expect(() => number({required: true}).validate('numberTest', 0)).not.to.throw()
       })
     })
+
+    context('deserialize', function () {
+      it('returns undefined when the value is undefined', function () {
+        expect(number().deserialize(undefined)).to.be.undefined
+      })
+
+      it('returns undefined when the value is null', function () {
+        expect(number().deserialize(null)).to.be.null
+      })
+
+      it('returns the correct number when the value is a valid number string', function () {
+        expect(number().deserialize('42')).to.eq(42)
+      })
+
+      it('returns NaN when the value is not a valid number string', function () {
+        expect(number().deserialize('abc123')).to.be.NaN
+      })
+    })
   })
 
   context('string', function () {
@@ -60,6 +78,20 @@ describe('Prop type', function () {
 
       it('throws an error when a required value is null', function () {
         expect(() => string({required: true}).validate('stringTest', null)).to.throw(Error, 'Property stringTest is required but was not specified')
+      })
+    })
+
+    context('deserialize', function () {
+      it('returns undefined when the value is undefined', function () {
+        expect(string().deserialize(undefined)).to.be.undefined
+      })
+
+      it('returns undefined when the value is null', function () {
+        expect(string().deserialize(null)).to.be.null
+      })
+
+      it('returns the value when the value is a string', function () {
+        expect(string().deserialize('42')).to.eq('42')
       })
     })
   })

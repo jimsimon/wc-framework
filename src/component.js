@@ -1,6 +1,6 @@
 import { elementOpen, elementClose, text, patch } from 'incremental-dom'
 import debounce from 'lodash.debounce'
-import PropTypeRegistry from './prop-type-registry'
+import humps from 'humps'
 
 export default class Component extends HTMLElement {
   constructor () {
@@ -13,12 +13,27 @@ export default class Component extends HTMLElement {
   }
 
   static get observedAttributes () {
-    this._propTypeRegistry = new PropTypeRegistry(this.propTypes)
-    return this._propTypeRegistry.attributeNames
+    const results = Object.entries(this.propTypes)
+      .reduce(function (accumulator, [name, propType]) {
+        const attributeName = humps.decamelize(name, { separator: '-' })
+        propType.name = name
+        propType.attributeName = attributeName
+        accumulator.propTypesByPropName.set(name, propType)
+        accumulator.propTypesByAttributeName.set(attributeName, propType)
+        accumulator.attributeNames.push(attributeName)
+        return accumulator
+      }, {
+        attributeNames: [],
+        propTypesByPropName: new Map(),
+        propTypesByAttributeName: new Map()
+      })
+    this._propTypesByPropName = results.propTypesByPropName
+    this._propTypesByAttributeName = results.propTypesByAttributeName
+    return results.attributeNames
   }
 
   attributeChangedCallback (attributeName, oldValue, newValue) {
-    const {name, deserialize} = this.constructor._propTypeRegistry.propTypesByAttributeName.get(attributeName)
+    const {name, deserialize} = this.constructor._propTypesByAttributeName.get(attributeName)
     console.log(`attribute ${attributeName} changed from ${oldValue} to ${newValue}`)
     this[name] = deserialize(newValue)
   }
@@ -64,7 +79,7 @@ export default class Component extends HTMLElement {
 
   _defineProperties () {
     const { constructor: Type } = this
-    for (const [name, propType] of Type._propTypeRegistry.propTypesByPropName) {
+    for (const [name, propType] of Type._propTypesByPropName) {
       Object.defineProperty(this, name, {
         configurable: true,
         enumerable: true,

@@ -50,8 +50,6 @@ export default class Component extends HTMLElement {
     return false
   }
 
-  render () {}
-
   _renderComponent = debounce(function () {
     console.log('renderComponent called')
     if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues)) {

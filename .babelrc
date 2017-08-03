@@ -20,7 +20,13 @@
   ],
   "env": {
     "test": {
-      "plugins": ["istanbul"]
+      "plugins": [
+        ["istanbul", {
+          "exclude": [
+            "tests/**/*"
+          ]
+        }]
+      ]
     },
     "production": {
       "presets": ["babili"]

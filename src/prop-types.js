@@ -28,6 +28,9 @@ class NumberType extends PropType {
   }
 
   deserialize (value) {
+    if (value === undefined || value === null) {
+      return value
+    }
     return parseInt(value, 10)
   }
 }

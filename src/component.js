@@ -7,6 +7,8 @@ export default class Component extends HTMLElement {
     super()
     this.attachShadow({ mode: 'open' })
 
+    this._propValuesAtLastRender = {}
+    this._propValues = {}
     this._defineProperties()
   }
 
@@ -16,10 +18,9 @@ export default class Component extends HTMLElement {
   }
 
   attributeChangedCallback (attributeName, oldValue, newValue) {
-    const {constructor: Type} = this
-    const propType = Type._propTypeRegistry.propTypesByAttributeName.get(attributeName)
+    const {name, deserialize} = this.constructor._propTypeRegistry.propTypesByAttributeName.get(attributeName)
     console.log(`attribute ${attributeName} changed from ${oldValue} to ${newValue}`)
-    this[propType.name] = propType.deserialize(newValue)
+    this[name] = deserialize(newValue)
   }
 
   connectedCallback () {
@@ -37,30 +38,45 @@ export default class Component extends HTMLElement {
     elementClose('style')
   }
 
+  shouldComponentRender (oldProps, newProps) {
+    for (const [name, newValue] of Object.entries(newProps)) {
+      const oldValue = oldProps[name]
+      if (newValue !== oldValue) {
+        console.log('shouldComponentRender: true')
+        return true
+      }
+    }
+    console.log('shouldComponentRender: false')
+    return false
+  }
+
   render () {}
 
   _renderComponent = debounce(function () {
     console.log('renderComponent called')
-    patch(this.shadowRoot, () => {
-      this.renderCss()
-      this.render()
-    })
+    if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues)) {
+      console.log('rendering')
+      patch(this.shadowRoot, () => {
+        this.renderCss()
+        this.render()
+      })
+    }
+    this._propValuesAtLastRender = Object.assign({}, this._propValues)
   })
 
   _defineProperties () {
-    const propValues = {}
     const { constructor: Type } = this
     for (const [name, propType] of Type._propTypeRegistry.propTypesByPropName) {
       Object.defineProperty(this, name, {
         configurable: true,
         enumerable: true,
         get: function () {
-          return propValues[name]
+          return this._propValues[name]
         },
         set: function (value) {
           console.log(`Property ${name} set to ${value}`)
           propType.validate(name, value)
-          propValues[name] = value
+          this._propValues[name] = value
           this._renderComponent()
         }
       })

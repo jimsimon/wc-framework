@@ -1,0 +1,21 @@
+{
+  "presets": [
+    [
+      "env", {
+      "targets": {
+        "browsers": [
+          "last 2 Chrome versions"
+        ]
+      },
+      "modules": false
+    }]
+  ],
+  "plugins": [
+    [
+      "transform-incremental-dom", {
+        "moduleSource": "incremental-dom"
+      }
+    ],
+    ["transform-class-properties"]
+  ]
+}

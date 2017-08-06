@@ -1,0 +1,16 @@
+{
+  "name": "counter-example",
+  "version": "1.0.0",
+  "description": "A simple counter that increments on each click",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --open"
+  },
+  "private": true,
+  "dependencies": {
+    "wc-framework": "file:../.."
+  },
+  "devDependencies": {
+    "webpack-dev-server": "^2.6.1"
+  }
+}

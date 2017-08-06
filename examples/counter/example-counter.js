@@ -1,6 +1,6 @@
 // Normally we would just do "import Component, { PropTypes } from 'wc-framework', but since we live inside the same
 // repo we need to do it this way
-import Component, { PropTypes } from 'wc-framework/src/index'
+import { Component, PropTypes } from 'wc-framework/src/index'
 
 customElements.define('example-counter', class extends Component {
   static get propTypes() {
@@ -8,7 +8,8 @@ customElements.define('example-counter', class extends Component {
       count: PropTypes.number({
         required: true,
         defaultValue: 0
-      })
+      }),
+      banana: PropTypes.boolean()
     }
   }
 

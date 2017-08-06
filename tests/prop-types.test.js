@@ -1,8 +1,8 @@
-import { number, string } from '../src/prop-types'
+import {boolean, number, string} from '../src/prop-types'
 
 describe('Prop type', function () {
   context('number', function () {
-    context('validation', function (){
+    context('validation', function () {
       it('throws an error when the value is an empty string', function () {
         expect(() => number().validate('numberTest', ''))
           .to.throw(Error, 'Expected a number for property numberTest but received string')
@@ -58,7 +58,7 @@ describe('Prop type', function () {
   })
 
   context('string', function () {
-    context('validation', function (){
+    context('validation', function () {
       it('throws an error for a non-string value', function () {
         expect(() => string().validate('stringTest', 42))
           .to.throw(Error, 'Expected a string for property stringTest but received number')
@@ -92,6 +92,45 @@ describe('Prop type', function () {
 
       it('returns the value when the value is a string', function () {
         expect(string().deserialize('42')).to.eq('42')
+      })
+    })
+  })
+
+  context('boolean', function () {
+    context('validate', function () {
+      it('throws an error for a non-boolean value', function () {
+        expect(() => boolean().validate('booleanTest', 42))
+          .to.throw(Error, 'Expected a boolean for property booleanTest but received number')
+      })
+
+      it('does not throw an error when the value is undefined', function () {
+        expect(() => boolean().validate('booleanTest', undefined)).not.to.throw()
+      })
+
+      it('does not throw an error when the value is null', function () {
+        expect(() => boolean().validate('booleanTest', null)).not.to.throw()
+      })
+
+      it('throws an error when a required value is undefined', function () {
+        expect(() => boolean({required: true}).validate('booleanTest', undefined)).to.throw(Error, 'Property booleanTest is required but was not specified')
+      })
+
+      it('throws an error when a required value is null', function () {
+        expect(() => boolean({required: true}).validate('booleanTest', null)).to.throw(Error, 'Property booleanTest is required but was not specified')
+      })
+    })
+
+    context('deserialize', function () {
+      it('returns false when the value is undefined', function () {
+        expect(boolean().deserialize(undefined)).to.eq(false)
+      })
+
+      it('returns false when the value is null', function () {
+        expect(boolean().deserialize(null)).to.eq(false)
+      })
+
+      it('returns the true when the value is defined', function () {
+        expect(boolean().deserialize('42')).to.eq(true)
       })
     })
   })

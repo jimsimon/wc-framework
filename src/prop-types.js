@@ -1,4 +1,4 @@
-class PropType {
+export class PropType {
   constructor ({required, defaultValue} = {}) {
     this.required = required
     this.defaultValue = defaultValue
@@ -13,7 +13,7 @@ class PropType {
   }
 }
 
-class NumberType extends PropType {
+export class NumberType extends PropType {
   validate (name, value) {
     super.validate(name, value)
 
@@ -35,12 +35,12 @@ class NumberType extends PropType {
   }
 }
 
-class StringType extends PropType {
-  validate (name, potentialString) {
-    super.validate(name, potentialString)
+export class StringType extends PropType {
+  validate (name, value) {
+    super.validate(name, value)
 
-    if (potentialString !== undefined && potentialString !== null && typeof potentialString !== 'string') {
-      throw new Error(`Expected a string for property ${name} but received ${typeof potentialString}`)
+    if (value !== undefined && value !== null && typeof value !== 'string') {
+      throw new Error(`Expected a string for property ${name} but received ${typeof value}`)
     }
   }
 
@@ -49,10 +49,26 @@ class StringType extends PropType {
   }
 }
 
+export class BooleanType extends PropType {
+  validate (name, value) {
+    super.validate(name, value)
+
+    if (value !== undefined && value !== null && typeof value !== 'boolean') {
+      throw new Error(`Expected a boolean for property ${name} but received ${typeof value}`)
+    }
+  }
+
+  deserialize (value) {
+    return value !== null && value !== undefined
+  }
+}
+
+export const boolean = (config) => new BooleanType(config)
 export const number = (config) => new NumberType(config)
 export const string = (config) => new StringType(config)
 
 export default {
+  boolean,
   number,
   string
 }

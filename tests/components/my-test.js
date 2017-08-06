@@ -10,7 +10,8 @@ customElements.define('my-test', class extends Component {
       }),
       requiredString: PropTypes.string({
         required: true
-      })
+      }),
+      optionalBoolean: PropTypes.boolean()
     }
   }
 
@@ -18,8 +19,9 @@ customElements.define('my-test', class extends Component {
     return (
       <table>
         <tbody>
-        <tr><th>optionalString</th><th>{this.optionalString}</th></tr>
+        <tr><th>optionalBoolean</th><th>{this.optionalBoolean}</th></tr>
         <tr><th>optionalNumber</th><th>{this.optionalNumber}</th></tr>
+        <tr><th>optionalString</th><th>{this.optionalString}</th></tr>
         <tr><th>requiredString</th><th>{this.requiredString}</th></tr>
         </tbody>
       </table>

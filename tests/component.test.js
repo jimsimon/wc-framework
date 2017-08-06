@@ -6,7 +6,7 @@ describe('Component', function () {
 
   let element
   beforeEach(function () {
-    element = testbed.render(`<my-test required-string="test" optional-string="hello" optional-number="3"></my-test>`)
+    element = testbed.render(`<my-test required-string="test" optional-string="hello" optional-number="3" optional-boolean></my-test>`)
   })
 
   it('renders a shadow root', function () {
@@ -14,9 +14,10 @@ describe('Component', function () {
   })
 
   it('sets properties from attributes', function () {
-    expect(element.requiredString).to.eq('test')
-    expect(element.optionalString).to.eq('hello')
+    expect(element.optionalBoolean).to.eq(true)
     expect(element.optionalNumber).to.eq(3)
+    expect(element.optionalString).to.eq('hello')
+    expect(element.requiredString).to.eq('test')
   })
 
   it('uses the default value a property has one and its corresponding attribute is NOT defined', function () {
@@ -26,23 +27,27 @@ describe('Component', function () {
   })
 
   it('updates properties when their corresponding attributes are changed', function () {
-    element.setAttribute('required-string', 'test2')
-    element.setAttribute('optional-string', 'bye')
+    element.removeAttribute('optional-boolean')
     element.setAttribute('optional-number', '4')
+    element.setAttribute('optional-string', 'bye')
+    element.setAttribute('required-string', 'test2')
 
-    expect(element.requiredString).to.eq('test2')
-    expect(element.optionalString).to.eq('bye')
+    expect(element.optionalBoolean).to.eq(false)
     expect(element.optionalNumber).to.eq(4)
+    expect(element.optionalString).to.eq('bye')
+    expect(element.requiredString).to.eq('test2')
   })
 
   it("allows changing properties via the element's API", function () {
-    element.requiredString = 'test2'
-    element.optionalString = null
+    element.optionalBoolean = false
     element.optionalNumber = 4
+    element.optionalString = null
+    element.requiredString = 'test2'
 
-    expect(element.requiredString).to.eq('test2')
-    expect(element.optionalString).to.eq(null)
+    expect(element.optionalBoolean).to.eq(false)
     expect(element.optionalNumber).to.eq(4)
+    expect(element.optionalString).to.eq(null)
+    expect(element.requiredString).to.eq('test2')
   })
 
   it('calls render when a property changes', function () {
@@ -56,9 +61,10 @@ describe('Component', function () {
   it('only calls render once when multiple properties are changed', function () {
     const renderSpy = testbed.sandbox.spy(element, 'render')
 
-    element.requiredString = 'test2'
-    element.optionalString = 'bye'
+    element.optionalBoolean = false
     element.optionalNumber = 4
+    element.optionalString = 'bye'
+    element.requiredString = 'test2'
 
     testbed.sandbox.clock.tick(0)
     expect(renderSpy).to.have.been.calledOnce

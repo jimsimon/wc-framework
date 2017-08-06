@@ -1,4 +1,4 @@
-import {boolean, date, number, object, string} from '../src/prop-types'
+import {array, boolean, date, number, object, string} from '../src/prop-types'
 
 describe('Prop type', function () {
   context('number', function () {
@@ -216,6 +216,51 @@ describe('Prop type', function () {
       it('returns the correct object when the value is a valid json object string', function () {
         const expectedObject = {"hello": "world", "1": 2, "banana": true}
         expect(object().deserialize(JSON.stringify(expectedObject))).to.eql(expectedObject)
+      })
+    })
+  })
+
+  context('array', function () {
+    context('validate', function () {
+      it('throws an error for a non-array value', function () {
+        expect(() => array().validate('arrayTest', 42))
+          .to.throw(Error, 'Expected an array for property arrayTest but received number')
+      })
+
+      it('throws an error when the value is an object', function () {
+        expect(() => array().validate('arrayTest', {}))
+          .to.throw(Error, 'Expected an array for property arrayTest but received object')
+      })
+
+      it('does not throw an error when the value is undefined', function () {
+        expect(() => array().validate('arrayTest', undefined)).not.to.throw()
+      })
+
+      it('does not throw an error when the value is null', function () {
+        expect(() => array().validate('arrayTest', null)).not.to.throw()
+      })
+
+      it('throws an error when a required value is undefined', function () {
+        expect(() => array({required: true}).validate('arrayTest', undefined)).to.throw(Error, 'Property arrayTest is required but was not specified')
+      })
+
+      it('throws an error when a required value is null', function () {
+        expect(() => array({required: true}).validate('arrayTest', null)).to.throw(Error, 'Property arrayTest is required but was not specified')
+      })
+    })
+
+    context('deserialize', function () {
+      it('returns undefined when the value is undefined', function () {
+        expect(array().deserialize(undefined)).to.be.undefined
+      })
+
+      it('returns null when the value is null', function () {
+        expect(array().deserialize(null)).to.be.null
+      })
+
+      it('returns the correct array when the value is a valid json array string', function () {
+        const expectedObject = {"hello": "world", "1": 2, "banana": true}
+        expect(array().deserialize(JSON.stringify(expectedObject))).to.eql(expectedObject)
       })
     })
   })

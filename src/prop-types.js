@@ -1,4 +1,4 @@
-export class PropType {
+class PropType {
   constructor ({required, defaultValue} = {}) {
     this.required = required
     this.defaultValue = defaultValue
@@ -13,7 +13,7 @@ export class PropType {
   }
 }
 
-export class NumberType extends PropType {
+class NumberType extends PropType {
   validate (name, value) {
     super.validate(name, value)
 
@@ -35,7 +35,7 @@ export class NumberType extends PropType {
   }
 }
 
-export class StringType extends PropType {
+class StringType extends PropType {
   validate (name, value) {
     super.validate(name, value)
 
@@ -49,7 +49,7 @@ export class StringType extends PropType {
   }
 }
 
-export class BooleanType extends PropType {
+class BooleanType extends PropType {
   validate (name, value) {
     super.validate(name, value)
 
@@ -63,12 +63,31 @@ export class BooleanType extends PropType {
   }
 }
 
+class DateType extends PropType {
+  validate (name, value) {
+    super.validate(name, value)
+
+    if (value !== undefined && value !== null && typeof !(value instanceof Date)) {
+      throw new Error(`Expected a date for property ${name} but received ${typeof value}`)
+    }
+  }
+
+  deserialize (value) {
+    if (value === undefined || value === null) {
+      return value
+    }
+    return new Date(value)
+  }
+}
+
 export const boolean = (config) => new BooleanType(config)
+export const date = (config) => new DateType(config)
 export const number = (config) => new NumberType(config)
 export const string = (config) => new StringType(config)
 
 export default {
   boolean,
+  date,
   number,
   string
 }

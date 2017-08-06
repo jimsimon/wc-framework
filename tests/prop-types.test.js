@@ -1,4 +1,4 @@
-import {boolean, number, string} from '../src/prop-types'
+import {boolean, date, number, string} from '../src/prop-types'
 
 describe('Prop type', function () {
   context('number', function () {
@@ -43,7 +43,7 @@ describe('Prop type', function () {
         expect(number().deserialize(undefined)).to.be.undefined
       })
 
-      it('returns undefined when the value is null', function () {
+      it('returns null when the value is null', function () {
         expect(number().deserialize(null)).to.be.null
       })
 
@@ -131,6 +131,46 @@ describe('Prop type', function () {
 
       it('returns the true when the value is defined', function () {
         expect(boolean().deserialize('42')).to.eq(true)
+      })
+    })
+  })
+
+  context('date', function () {
+    context('validate', function () {
+      it('throws an error for a non-date value', function () {
+        expect(() => date().validate('dateTest', 42))
+          .to.throw(Error, 'Expected a date for property dateTest but received number')
+      })
+
+      it('does not throw an error when the value is undefined', function () {
+        expect(() => date().validate('dateTest', undefined)).not.to.throw()
+      })
+
+      it('does not throw an error when the value is null', function () {
+        expect(() => date().validate('dateTest', null)).not.to.throw()
+      })
+
+      it('throws an error when a required value is undefined', function () {
+        expect(() => date({required: true}).validate('dateTest', undefined)).to.throw(Error, 'Property dateTest is required but was not specified')
+      })
+
+      it('throws an error when a required value is null', function () {
+        expect(() => date({required: true}).validate('dateTest', null)).to.throw(Error, 'Property dateTest is required but was not specified')
+      })
+    })
+
+    context('deserialize', function () {
+      it('returns undefined when the value is undefined', function () {
+        expect(date().deserialize(undefined)).to.be.undefined
+      })
+
+      it('returns undefined when the value is null', function () {
+        expect(date().deserialize(null)).to.be.null
+      })
+
+      it('returns the correct date object when the value is a valid date string', function () {
+        const expectedDate = new Date('2017-08-06T05:28:12.347Z')
+        expect(date().deserialize('2017-08-06T05:28:12.347Z')).to.eql(expectedDate)
       })
     })
   })

@@ -1,4 +1,4 @@
-import {boolean, date, number, string} from '../src/prop-types'
+import {boolean, date, number, object, string} from '../src/prop-types'
 
 describe('Prop type', function () {
   context('number', function () {
@@ -86,7 +86,7 @@ describe('Prop type', function () {
         expect(string().deserialize(undefined)).to.be.undefined
       })
 
-      it('returns undefined when the value is null', function () {
+      it('returns null when the value is null', function () {
         expect(string().deserialize(null)).to.be.null
       })
 
@@ -164,13 +164,58 @@ describe('Prop type', function () {
         expect(date().deserialize(undefined)).to.be.undefined
       })
 
-      it('returns undefined when the value is null', function () {
+      it('returns null when the value is null', function () {
         expect(date().deserialize(null)).to.be.null
       })
 
       it('returns the correct date object when the value is a valid date string', function () {
         const expectedDate = new Date('2017-08-06T05:28:12.347Z')
         expect(date().deserialize('2017-08-06T05:28:12.347Z')).to.eql(expectedDate)
+      })
+    })
+  })
+
+  context('object', function () {
+    context('validate', function () {
+      it('throws an error for a non-object value', function () {
+        expect(() => object().validate('objectTest', 42))
+          .to.throw(Error, 'Expected an object for property objectTest but received number')
+      })
+
+      it('does not throw an error when the value is undefined', function () {
+        expect(() => object().validate('objectTest', undefined)).not.to.throw()
+      })
+
+      it('does not throw an error when the value is null', function () {
+        expect(() => object().validate('objectTest', null)).not.to.throw()
+      })
+
+      it('does not throw an error when the value is complex', function () {
+        class Complex {}
+        expect(() => object().validate('objectTest', new Complex())).not.to.throw()
+      })
+
+      it('throws an error when a required value is undefined', function () {
+        expect(() => object({required: true}).validate('objectTest', undefined)).to.throw(Error, 'Property objectTest is required but was not specified')
+      })
+
+      it('throws an error when a required value is null', function () {
+        expect(() => object({required: true}).validate('objectTest', null)).to.throw(Error, 'Property objectTest is required but was not specified')
+      })
+    })
+
+    context('deserialize', function () {
+      it('returns undefined when the value is undefined', function () {
+        expect(object().deserialize(undefined)).to.be.undefined
+      })
+
+      it('returns null when the value is null', function () {
+        expect(object().deserialize(null)).to.be.null
+      })
+
+      it('returns the correct object when the value is a valid json object string', function () {
+        const expectedObject = {"hello": "world", "1": 2, "banana": true}
+        expect(object().deserialize(JSON.stringify(expectedObject))).to.eql(expectedObject)
       })
     })
   })

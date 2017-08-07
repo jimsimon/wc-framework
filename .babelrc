@@ -7,7 +7,7 @@
           "last 2 Chrome versions"
         ]
       },
-      "modules": false
+      "modules": "umd"
     }]
   ],
   "plugins": [

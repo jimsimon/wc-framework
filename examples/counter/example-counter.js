@@ -1,8 +1,8 @@
 // Normally we would just do "import Component, { PropTypes } from 'wc-framework', but since we live inside the same
 // repo we need to do it this way
-import { Component, PropTypes } from 'wc-framework/src/index'
+import { Component, Logger, PropTypes } from 'wc-framework/src/index'
 
-customElements.define('example-counter', class extends Component {
+customElements.define('example-counter', class ExampleCounter extends Component {
   static get propTypes() {
     return {
       count: PropTypes.number({
@@ -13,10 +13,15 @@ customElements.define('example-counter', class extends Component {
     }
   }
 
+  constructor () {
+    super()
+    this._logger = new Logger(this.constructor.name)
+  }
+
   connectedCallback () {
     super.connectedCallback()
 
-    // Increment count by 1 every second
+    this._logger.info('Incrementing count by 1 every second')
     this.intervalHandle = setInterval(() => this.count++, 1000)
   }
 

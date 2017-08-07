@@ -1,10 +1,12 @@
 import { elementOpen, elementClose, text, patch } from 'incremental-dom'
 import debounce from 'lodash.debounce'
 import humps from 'humps'
+import Logger from './logger'
 
 export default class Component extends HTMLElement {
   constructor () {
     super()
+    this._logger = new Logger(this.constructor.name)
     this.attachShadow({ mode: 'open' })
 
     this._propValuesAtLastRender = {}
@@ -34,12 +36,12 @@ export default class Component extends HTMLElement {
 
   attributeChangedCallback (attributeName, oldValue, newValue) {
     const {name, deserialize} = this.constructor._propTypesByAttributeName.get(attributeName)
-    console.log(`attribute ${attributeName} changed from ${oldValue} to ${newValue}`)
+    this._logger.log(`attribute ${attributeName} changed from ${oldValue} to ${newValue}`)
     this[name] = deserialize(newValue)
   }
 
   connectedCallback () {
-    console.log('connected')
+    this._logger.log('connected')
     this._renderComponent()
   }
 
@@ -57,18 +59,18 @@ export default class Component extends HTMLElement {
     for (const [name, newValue] of Object.entries(newProps)) {
       const oldValue = oldProps[name]
       if (newValue !== oldValue) {
-        console.log('shouldComponentRender: true')
+        this._logger.log('shouldComponentRender: true')
         return true
       }
     }
-    console.log('shouldComponentRender: false')
+    this._logger.log('shouldComponentRender: false')
     return false
   }
 
   _renderComponent = debounce(function () {
-    console.log('renderComponent called')
+    this._logger.log('renderComponent called')
     if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues)) {
-      console.log('rendering')
+      this._logger.log('rendering')
       patch(this.shadowRoot, () => {
         this.renderCss()
         this.render()
@@ -87,7 +89,7 @@ export default class Component extends HTMLElement {
           return this._propValues[name]
         },
         set: function (value) {
-          console.log(`Property ${name} set to ${value}`)
+          this._logger.log(`Property ${name} set to ${value}`)
           propType.validate(name, value)
           this._propValues[name] = value
           this._renderComponent()

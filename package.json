@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "build": "NODE_ENV=production rm -rf lib && babel src --out-dir lib",
+    "build": "rm -rf lib && NODE_ENV=production babel src --out-dir lib",
     "test": "NODE_ENV=test karma start",
     "test:watch": "NODE_ENV=test karma start --no-single-run",
     "test:production": "NODE_ENV=production karma start",

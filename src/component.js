@@ -9,9 +9,14 @@ export default class Component extends HTMLElement {
     this._logger = new Logger(this.constructor.name)
     this.attachShadow({ mode: 'open' })
 
+    this._firstRender = true
     this._propValuesAtLastRender = {}
     this._propValues = {}
     this._defineProperties()
+  }
+
+  static get propTypes () {
+    return {}
   }
 
   static get observedAttributes () {
@@ -55,7 +60,12 @@ export default class Component extends HTMLElement {
     elementClose('style')
   }
 
-  shouldComponentRender (oldProps, newProps) {
+  shouldComponentRender (oldProps, newProps, slotchangeEvent) {
+    if (slotchangeEvent) {
+      this._logger.log('shouldComponentRender: true')
+      return true
+    }
+
     for (const [name, newValue] of Object.entries(newProps)) {
       const oldValue = oldProps[name]
       if (newValue !== oldValue) {
@@ -67,15 +77,20 @@ export default class Component extends HTMLElement {
     return false
   }
 
-  _renderComponent = debounce(function () {
+  _renderComponent = debounce(function (slotchangeEvent) {
     this._logger.log('renderComponent called')
-    if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues)) {
+    if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues, slotchangeEvent) || this._firstRender) {
       this._logger.log('rendering')
       patch(this.shadowRoot, () => {
         this.renderCss()
         this.render()
       })
+      const slots = this.shadowRoot.querySelectorAll('slot')
+      slots.forEach((slot) => {
+        slot.addEventListener('slotchange', this._renderComponent.bind(this))
+      })
     }
+    this._firstRender = false
     this._propValuesAtLastRender = Object.assign({}, this._propValues)
   })
 

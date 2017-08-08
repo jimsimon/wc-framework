@@ -1,7 +1,7 @@
 import Component from '../../src/component'
 import PropTypes from '../../src/prop-types'
 
-customElements.define('my-test', class extends Component {
+customElements.define('properties-test', class extends Component {
   static get propTypes() {
     return {
       optionalString: PropTypes.string(),

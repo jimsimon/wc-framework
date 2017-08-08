@@ -1,5 +1,6 @@
 export default class Testbed {
   constructor () {
+    this.setTimeout = setTimeout.bind(window)
     this.containers = []
 
     beforeEach(this.beforeEach.bind(this))

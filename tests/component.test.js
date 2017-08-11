@@ -1,6 +1,6 @@
 import Testbed from './util/testbed'
-import './components/properties-test'
-import './components/slot-test'
+import './fixtures/properties-test'
+import './fixtures/slot-test'
 
 describe('Component', function () {
   const testbed = new Testbed()

@@ -11,7 +11,7 @@ module.exports = function (config) {
     },
     browsers: ['Chrome'],
     singleRun: true,
-    webpack: require('./webpack.config'),
+    webpack: require('./webpack.test.config'),
     coverageReporter: {
       dir : 'coverage/',
       reporters: [

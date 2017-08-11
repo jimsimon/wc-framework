@@ -7,10 +7,17 @@
           "last 2 Chrome versions"
         ]
       },
-      "modules": "umd"
+      "modules": false
     }]
   ],
   "plugins": [
+    [
+      "babel-plugin-inline-import", {
+        "extensions": [
+          ".css"
+        ]
+      }
+    ],
     [
       "transform-incremental-dom", {
         "moduleSource": "incremental-dom"

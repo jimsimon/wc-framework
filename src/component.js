@@ -12,10 +12,16 @@ export default class Component extends HTMLElement {
     this._firstRender = true
     this._propValuesAtLastRender = {}
     this._propValues = {}
+
+    this._setHostAttributes()
     this._defineProperties()
   }
 
   static get propTypes () {
+    return {}
+  }
+
+  static get hostAttributes () {
     return {}
   }
 
@@ -75,6 +81,13 @@ export default class Component extends HTMLElement {
     }
     this._logger.log('shouldComponentRender: false')
     return false
+  }
+
+  _setHostAttributes () {
+    const {constructor: Type} = this
+    for (const [name, value] of Object.entries(Type.hostAttributes)) {
+      this.setAttribute(name, value)
+    }
   }
 
   _renderComponent = debounce(function (slotchangeEvent) {

@@ -1,12 +1,11 @@
 import { elementOpen, elementClose, text, patch } from 'incremental-dom'
 import debounce from 'lodash.debounce'
 import humps from 'humps'
-import Logger from './logger'
+import LoggerMixin from './mixins/logger-mixin'
 
-export default class Component extends HTMLElement {
+export default class Component extends LoggerMixin(HTMLElement) {
   constructor () {
     super()
-    this._logger = new Logger(this.constructor.name)
     this.attachShadow({ mode: 'open' })
 
     this._firstRender = true
@@ -47,12 +46,12 @@ export default class Component extends HTMLElement {
 
   attributeChangedCallback (attributeName, oldValue, newValue) {
     const {name, deserialize} = this.constructor._propTypesByAttributeName.get(attributeName)
-    this._logger.log(`attribute ${attributeName} changed from ${oldValue} to ${newValue}`)
+    this.log(`attribute ${attributeName} changed from ${oldValue} to ${newValue}`)
     this[name] = deserialize(newValue)
   }
 
   connectedCallback () {
-    this._logger.log('connected')
+    this.log('connected')
     this._renderComponent()
   }
 
@@ -68,18 +67,18 @@ export default class Component extends HTMLElement {
 
   shouldComponentRender (oldProps, newProps, slotchangeEvent) {
     if (slotchangeEvent) {
-      this._logger.log('shouldComponentRender: true')
+      this.log('shouldComponentRender: true')
       return true
     }
 
     for (const [name, newValue] of Object.entries(newProps)) {
       const oldValue = oldProps[name]
       if (newValue !== oldValue) {
-        this._logger.log('shouldComponentRender: true')
+        this.log('shouldComponentRender: true')
         return true
       }
     }
-    this._logger.log('shouldComponentRender: false')
+    this.log('shouldComponentRender: false')
     return false
   }
 
@@ -91,9 +90,9 @@ export default class Component extends HTMLElement {
   }
 
   _renderComponent = debounce(function (slotchangeEvent) {
-    this._logger.log('renderComponent called')
+    this.log('renderComponent called')
     if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues, slotchangeEvent) || this._firstRender) {
-      this._logger.log('rendering')
+      this.log('rendering')
       patch(this.shadowRoot, () => {
         this.renderCss()
         this.render()
@@ -117,7 +116,7 @@ export default class Component extends HTMLElement {
           return this._propValues[name]
         },
         set: function (value) {
-          this._logger.log(`Property ${name} set to ${value}`)
+          this.log(`Property ${name} set to ${value}`)
           propType.validate(name, value)
           this._propValues[name] = value
           this._renderComponent()

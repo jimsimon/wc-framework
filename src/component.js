@@ -2,8 +2,9 @@ import { elementOpen, elementClose, text, patch } from 'incremental-dom'
 import debounce from 'lodash.debounce'
 import humps from 'humps'
 import LoggerMixin from './mixins/logger-mixin'
+import HostAttributesMixin from './mixins/host-attributes-mixin'
 
-export default class Component extends LoggerMixin(HTMLElement) {
+export default class Component extends LoggerMixin(HostAttributesMixin(HTMLElement)) {
   constructor () {
     super()
     this.attachShadow({ mode: 'open' })
@@ -12,15 +13,10 @@ export default class Component extends LoggerMixin(HTMLElement) {
     this._propValuesAtLastRender = {}
     this._propValues = {}
 
-    this._setHostAttributes()
     this._defineProperties()
   }
 
   static get propTypes () {
-    return {}
-  }
-
-  static get hostAttributes () {
     return {}
   }
 
@@ -80,13 +76,6 @@ export default class Component extends LoggerMixin(HTMLElement) {
     }
     this.log('shouldComponentRender: false')
     return false
-  }
-
-  _setHostAttributes () {
-    const {constructor: Type} = this
-    for (const [name, value] of Object.entries(Type.hostAttributes)) {
-      this.setAttribute(name, value)
-    }
   }
 
   _renderComponent = debounce(function (slotchangeEvent) {

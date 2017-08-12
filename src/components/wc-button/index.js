@@ -25,7 +25,6 @@ customElements.define('wc-button', class WcButton extends Component {
   }
 
   renderCss () {
-    super.renderCss()
     return (
       <style>
         {styles}

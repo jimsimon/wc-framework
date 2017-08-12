@@ -18,6 +18,6 @@ describe('wc-button', function () {
       expect(event).to.be.ok
       done()
     })
-    element.shadowRoot.children[1].click()
+    element.shadowRoot.firstChild.click()
   })
 })

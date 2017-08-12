@@ -1,13 +1,14 @@
 import { elementOpen, elementClose, text, patch } from 'incremental-dom'
 import debounce from 'lodash.debounce'
 import humps from 'humps'
+import ComponentBase from './component-base'
 import LoggerMixin from './mixins/logger-mixin'
 import HostAttributesMixin from './mixins/host-attributes-mixin'
+import ShallowPropertyComparatorMixin from './mixins/shallow-property-comparator-mixin'
 
-export default class Component extends LoggerMixin(HostAttributesMixin(HTMLElement)) {
+export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPropertyComparatorMixin(ComponentBase))) {
   constructor () {
     super()
-    this.attachShadow({ mode: 'open' })
 
     this._firstRender = true
     this._propValuesAtLastRender = {}
@@ -46,49 +47,16 @@ export default class Component extends LoggerMixin(HostAttributesMixin(HTMLEleme
     this[name] = deserialize(newValue)
   }
 
-  connectedCallback () {
-    this.log('connected')
-    this._renderComponent()
-  }
-
-  renderCss () {
-    elementOpen('style')
-    text(
-`:host {
-  contain: content;
-}`
-    )
-    elementClose('style')
-  }
-
-  shouldComponentRender (oldProps, newProps, slotchangeEvent) {
-    if (slotchangeEvent) {
-      this.log('shouldComponentRender: true')
-      return true
-    }
-
-    for (const [name, newValue] of Object.entries(newProps)) {
-      const oldValue = oldProps[name]
-      if (newValue !== oldValue) {
-        this.log('shouldComponentRender: true')
-        return true
-      }
-    }
-    this.log('shouldComponentRender: false')
-    return false
-  }
-
-  _renderComponent = debounce(function (slotchangeEvent) {
+  rerender = debounce(function (slotchangeEvent) {
     this.log('renderComponent called')
     if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues, slotchangeEvent) || this._firstRender) {
       this.log('rendering')
       patch(this.shadowRoot, () => {
-        this.renderCss()
         this.render()
       })
       const slots = this.shadowRoot.querySelectorAll('slot')
       slots.forEach((slot) => {
-        slot.addEventListener('slotchange', this._renderComponent.bind(this))
+        slot.addEventListener('slotchange', this.rerender.bind(this))
       })
     }
     this._firstRender = false
@@ -108,7 +76,7 @@ export default class Component extends LoggerMixin(HostAttributesMixin(HTMLEleme
           this.log(`Property ${name} set to ${value}`)
           propType.validate(name, value)
           this._propValues[name] = value
-          this._renderComponent()
+          this.rerender()
         }
       })
       this[name] = this._getInitialValue(propType)

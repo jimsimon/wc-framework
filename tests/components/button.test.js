@@ -1,13 +1,8 @@
-import '../../src/components/wc-button/wc-button'
+import '../../src/components/wc-button/index'
 import Testbed from '../util/testbed'
 
 describe('wc-button', function () {
   const testbed = new Testbed()
-
-  it('renders a button', function () {
-    const element = testbed.render('<wc-button></wc-button>')
-    expect(element.shadowRoot.children[1].tagName).to.eq('BUTTON')
-  })
 
   it('renders child content inside the button', function () {
     const children = 'Button Text'

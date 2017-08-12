@@ -1,12 +1,12 @@
-import { elementOpen, elementClose, text, patch } from 'incremental-dom'
+import { patch } from 'incremental-dom'
 import debounce from 'lodash.debounce'
-import humps from 'humps'
 import ComponentBase from './component-base'
 import LoggerMixin from './mixins/logger-mixin'
 import HostAttributesMixin from './mixins/host-attributes-mixin'
 import ShallowPropertyComparatorMixin from './mixins/shallow-property-comparator-mixin'
+import PropertiesMixin from './mixins/properties-mixin'
 
-export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPropertyComparatorMixin(ComponentBase))) {
+export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPropertyComparatorMixin(PropertiesMixin(ComponentBase)))) {
   constructor () {
     super()
 
@@ -17,32 +17,12 @@ export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPr
     this._defineProperties()
   }
 
-  static get propTypes () {
-    return {}
-  }
-
   static get observedAttributes () {
-    const results = Object.entries(this.propTypes)
-      .reduce(function (accumulator, [name, propType]) {
-        const attributeName = humps.decamelize(name, { separator: '-' })
-        propType.name = name
-        propType.attributeName = attributeName
-        accumulator.propTypesByPropName.set(name, propType)
-        accumulator.propTypesByAttributeName.set(attributeName, propType)
-        accumulator.attributeNames.push(attributeName)
-        return accumulator
-      }, {
-        attributeNames: [],
-        propTypesByPropName: new Map(),
-        propTypesByAttributeName: new Map()
-      })
-    this._propTypesByPropName = results.propTypesByPropName
-    this._propTypesByAttributeName = results.propTypesByAttributeName
-    return results.attributeNames
+    return this.attributeNames
   }
 
   attributeChangedCallback (attributeName, oldValue, newValue) {
-    const {name, deserialize} = this.constructor._propTypesByAttributeName.get(attributeName)
+    const {name, deserialize} = this.constructor.propTypesByAttributeName.get(attributeName)
     this.log(`attribute ${attributeName} changed from ${oldValue} to ${newValue}`)
     this[name] = deserialize(newValue)
   }
@@ -52,6 +32,7 @@ export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPr
     if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues, slotchangeEvent) || this._firstRender) {
       this.log('rendering')
       patch(this.shadowRoot, () => {
+        this.renderCss()
         this.render()
       })
       const slots = this.shadowRoot.querySelectorAll('slot')
@@ -65,7 +46,7 @@ export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPr
 
   _defineProperties () {
     const { constructor: Type } = this
-    for (const [name, propType] of Type._propTypesByPropName) {
+    for (const [name, propType] of Type.propTypesByPropName) {
       Object.defineProperty(this, name, {
         configurable: true,
         enumerable: true,

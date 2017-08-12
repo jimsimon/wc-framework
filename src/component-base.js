@@ -9,8 +9,11 @@ export default class ComponentBase extends HTMLElement {
   }
 
   rerender = () => {
+    this.renderCss()
     this.render()
   }
+
+  renderCss () {}
 
   render () {}
 }

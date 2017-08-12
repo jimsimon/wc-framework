@@ -54,14 +54,10 @@ describe('Component', function () {
     })
 
     it('trigger a render when one changes', function () {
-      debugger
       const renderSpy = testbed.sandbox.spy(element, 'render')
 
-      debugger
       element.requiredString = 'test2'
-      debugger
       testbed.sandbox.clock.tick(0)
-      debugger
       expect(renderSpy).to.have.been.calledOnce
     })
 

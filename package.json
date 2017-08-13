@@ -18,6 +18,7 @@
     "shortid": "^2.2.8"
   },
   "devDependencies": {
+    "axe-core": "^2.3.1",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.25.0",
     "babel-inline-import-loader": "0.0.5",

@@ -11,7 +11,7 @@ customElements.define('wc-button', class WcButton extends Component {
   static get hostAttributes () {
     return {
       'tabindex': '0',
-      'aria-role': 'button'
+      'role': 'button'
     }
   }
 

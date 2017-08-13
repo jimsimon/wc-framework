@@ -10,7 +10,10 @@ describe('wc-button', function () {
     element = testbed.render(`<wc-button>${children}</wc-button>`)
   })
 
-
+  it('is accessible', function (done) {
+    testbed.sandbox.clock.restore()
+    expect(element).to.be.accessible(done)
+  })
 
   it('renders child content inside the button', function () {
     const assignedNodes = element.shadowRoot.querySelector('slot').assignedNodes()

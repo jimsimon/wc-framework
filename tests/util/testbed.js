@@ -1,3 +1,5 @@
+import axe from 'axe-core'
+
 export default class Testbed {
   constructor () {
     this.setTimeout = setTimeout.bind(window)
@@ -27,3 +29,22 @@ export default class Testbed {
     return container.firstChild
   }
 }
+const Assertion = global.chai.Assertion
+global.chai.use(function (chai, utils) {
+  utils.addMethod(Assertion.prototype, 'accessible', function (done) {
+    const obj = utils.flag(this, 'object')
+    axe.run(obj).then(function (results) {
+      if (results.violations.length) {
+        let reason = 'One or more accessibility issues were found\n'
+        results.violations.forEach(function ({id, help}) {
+          reason += `${id}: ${help}\n`
+        })
+        done(new Error(reason))
+      } else {
+        done()
+      }
+    }).catch(function () {
+      console.log('catching')
+    })
+  })
+})

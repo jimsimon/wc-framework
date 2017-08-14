@@ -1,10 +1,27 @@
 :host {
   contain: content;
+  font-family: Roboto, Noto, sans-serif;
+  background: transparent;
   display: inline-flex;
   align-items: center;
   height: 2.25rem;
-  min-width: 4rem;
+  min-width: 3.5rem;
   padding: 0 .5rem;
   margin: 0 .5rem;
   border-radius: .125rem;
+  text-transform: uppercase;
+}
+
+:host(:focus) {
+  background: rgba(153, 153, 153, .33)
+}
+
+:host(:active) {
+  background: rgba(153, 153, 153, .4)
+}
+
+:host([disabled]) {
+  background: transparent;
+  opacity: .26;
+  pointer-events: none;
 }

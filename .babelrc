@@ -14,7 +14,8 @@
     [
       "babel-plugin-inline-import", {
         "extensions": [
-          ".css"
+          ".css",
+          ".svg"
         ]
       }
     ],

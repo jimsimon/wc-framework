@@ -4,13 +4,15 @@ import styles from './styles.css'
 customElements.define('wc-button', class WcButton extends Component {
   static get propTypes () {
     return {
+      disabled: PropTypes.boolean({
+        defaultValue: false
+      }),
       raised: PropTypes.boolean()
     }
   }
 
   static get hostAttributes () {
     return {
-      'tabindex': '0',
       'role': 'button'
     }
   }
@@ -33,6 +35,8 @@ customElements.define('wc-button', class WcButton extends Component {
   }
 
   render () {
+    this.setAttribute('tabindex', this.disabled ? '-1': '0')
+    this.setAttribute('aria-disabled', this.disabled)
     return <slot />
   }
 })

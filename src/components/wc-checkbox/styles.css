@@ -1,0 +1,15 @@
+:host {
+  contain: content;
+  font-family: Roboto, Noto, sans-serif;
+  display: inline-block;
+}
+
+#container {
+  display: inline-flex;
+  align-items: center;
+}
+
+#checkbox {
+  display: inline-block;
+  margin-right: .5rem;
+}

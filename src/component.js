@@ -1,10 +1,16 @@
-import { patch } from 'incremental-dom'
+import { patch, attributes } from 'incremental-dom'
 import debounce from 'lodash.debounce'
 import ComponentBase from './component-base'
 import LoggerMixin from './mixins/logger-mixin'
 import HostAttributesMixin from './mixins/host-attributes-mixin'
 import ShallowPropertyComparatorMixin from './mixins/shallow-property-comparator-mixin'
 import PropertiesMixin from './mixins/properties-mixin'
+
+attributes.dangerouslySetInnerHTML = function(el, property, value) {
+  if (el.innerHTML !== value) {
+    el.innerHTML = value
+  }
+}
 
 export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPropertyComparatorMixin(PropertiesMixin(ComponentBase)))) {
   constructor () {

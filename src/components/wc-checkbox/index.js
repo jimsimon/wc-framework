@@ -1,7 +1,7 @@
 import { Component, PropTypes } from '../../index'
 import styles from './styles.css'
-import checkedCheckbox from 'material-design-icons/toggle/svg/production/ic_check_box_24px.svg'
-import uncheckedCheckbox from 'material-design-icons/toggle/svg/production/ic_check_box_outline_blank_24px.svg'
+import unchecked from './unchecked.svg'
+import checked from './checked.svg'
 
 customElements.define('wc-checkbox', class WcCheckbox extends Component {
   static get propTypes () {
@@ -15,16 +15,14 @@ customElements.define('wc-checkbox', class WcCheckbox extends Component {
     }
   }
 
-  static get hostAttributes () {
-    return {
-      'tabindex': '0',
-      'role': 'checkbox'
-    }
-  }
-
   constructor () {
     super()
     this.addEventListener('click', this.toggle)
+    this.addEventListener('keydown', function (event) {
+      if (event.key === ' ') {
+        this.click()
+      }
+    })
   }
 
   renderCss () {
@@ -36,14 +34,17 @@ customElements.define('wc-checkbox', class WcCheckbox extends Component {
   }
 
   render () {
-    this.setAttribute('aria-checked', `${this.checked}`)
-    this.setAttribute('aria-disabled', this.disabled)
-
     return (
-      <div id="container">
-        <span id="checkbox" __skip dangerouslySetInnerHTML={this.checked ? checkedCheckbox : uncheckedCheckbox}></span>
-        <span><slot /></span>
-      </div>
+      <label>
+        <span
+          id="checkbox"
+          tabindex="0"
+          aria-checked={this.checked}
+          aria-disabled={this.disabled}
+          __skip
+          dangerouslySetInnerHTML={this.checked ? checked : unchecked} />
+        <slot />
+      </label>
     )
   }
 

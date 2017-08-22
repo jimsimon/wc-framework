@@ -12,5 +12,17 @@
   <wc-checkbox>Normal</wc-checkbox>
   <wc-checkbox disabled>Disabled</wc-checkbox>
   <wc-checkbox disabled checked>Disabled and Checked</wc-checkbox>
+
+  <h2>Tray</h2>
+  <wc-button id="openTray">Open Tray</wc-button>
+  <wc-tray id="tray"><wc-button id="closeTray">Close Tray</wc-button></wc-tray>
+  <script>
+    document.querySelector("#openTray").addEventListener("click", function (event) {
+      document.querySelector("#tray").setAttribute("open", "true")
+    })
+    document.querySelector("#closeTray").addEventListener("click", function (event) {
+      document.querySelector("#tray").removeAttribute("open")
+    })
+  </script>
 </body>
 </html>

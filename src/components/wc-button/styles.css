@@ -4,6 +4,7 @@
   background: transparent;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   height: 2.25rem;
   min-width: 3.5rem;
   padding: 0 .5rem;

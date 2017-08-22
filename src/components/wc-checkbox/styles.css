@@ -4,6 +4,11 @@
   display: inline-block;
 }
 
+:host([disabled]) {
+  opacity: .26;
+  pointer-events: none;
+}
+
 label {
   display: flex;
   align-items: center;

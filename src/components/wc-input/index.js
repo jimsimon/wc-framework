@@ -1,3 +1,4 @@
+import {html} from 'lit-html'
 import { Component, PropTypes } from '../../index'
 import styles from './styles.css'
 
@@ -12,25 +13,14 @@ customElements.define('wc-input', class WcInput extends Component {
     })
   }
 
-  renderCss () {
-    return (
-      <style>
-        {styles}
-      </style>
-    )
-  }
-
   render () {
-    return (
-      <div>
-        <slot name="prefix" />
-        <input></input>
-        <slot name="suffix" />
-      </div>
-    )
-  }
-
-  normalizeIcon (icon) {
-    return icon.substring(1, icon.length - 2)
+    return html`
+      <style>
+        ${styles}
+      </style>
+      <slot name="prefix"></slot>
+      <input type="text" value="banana">
+      <slot name="suffix"></slot>
+    `
   }
 })

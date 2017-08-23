@@ -1,3 +1,4 @@
+import {html} from 'lit-html'
 import {Component, PropTypes} from '../../index'
 import styles from './styles.css'
 
@@ -26,17 +27,14 @@ customElements.define('wc-button', class WcButton extends Component {
     })
   }
 
-  renderCss () {
-    return (
-      <style>
-        {styles}
-      </style>
-    )
-  }
-
   render () {
     this.setAttribute('tabindex', this.disabled ? '-1': '0')
     this.setAttribute('aria-disabled', this.disabled)
-    return <slot />
+    return html`
+      <style>
+        ${styles}
+      </style>
+      <slot></slot>
+    `
   }
 })

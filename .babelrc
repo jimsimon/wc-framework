@@ -19,11 +19,6 @@
         ]
       }
     ],
-    [
-      "transform-incremental-dom", {
-        "moduleSource": "incremental-dom"
-      }
-    ],
     ["transform-class-properties"]
   ],
   "env": {

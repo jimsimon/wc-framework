@@ -1,16 +1,10 @@
-import { patch, attributes } from 'incremental-dom'
+import { render } from 'lit-html/lib/lit-extended'
 import debounce from 'lodash.debounce'
 import ComponentBase from './component-base'
 import LoggerMixin from './mixins/logger-mixin'
 import HostAttributesMixin from './mixins/host-attributes-mixin'
 import ShallowPropertyComparatorMixin from './mixins/shallow-property-comparator-mixin'
 import PropertiesMixin from './mixins/properties-mixin'
-
-attributes.dangerouslySetInnerHTML = function(el, property, value) {
-  if (el.innerHTML !== value) {
-    el.innerHTML = value
-  }
-}
 
 export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPropertyComparatorMixin(PropertiesMixin(ComponentBase)))) {
   constructor () {
@@ -37,10 +31,7 @@ export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPr
     this.log('renderComponent called')
     if (this.shouldComponentRender(this._propValuesAtLastRender, this._propValues, slotchangeEvent) || this._firstRender) {
       this.log('rendering')
-      patch(this.shadowRoot, () => {
-        this.renderCss()
-        this.render()
-      })
+      render(this.render(), this.shadowRoot)
       const slots = this.shadowRoot.querySelectorAll('slot')
       slots.forEach((slot) => {
         slot.addEventListener('slotchange', this.rerender.bind(this))
@@ -78,5 +69,13 @@ export default class Component extends LoggerMixin(HostAttributesMixin(ShallowPr
       initalValue = propType.deserialize(initalValue)
     }
     return initalValue
+  }
+
+  unsafe (value) {
+    return function () {
+      const tmp = document.createElement('template')
+      tmp.innerHTML = value
+      return document.importNode(tmp.content, true)
+    }
   }
 }

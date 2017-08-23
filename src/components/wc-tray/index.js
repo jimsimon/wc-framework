@@ -1,3 +1,4 @@
+import {html} from 'lit-html'
 import { Component, PropTypes } from '../../index'
 import styles from './styles.css'
 
@@ -20,23 +21,14 @@ customElements.define('wc-tray', class WcTray extends Component {
     })
   }
 
-  renderCss () {
-    return (
-      <style>
-        {styles}
-      </style>
-    )
-  }
-
   render () {
-    return (
+    return html`
+      <style>
+        ${styles}
+      </style>
       <div>
-        <slot />
+        <slot></slot>
       </div>
-    )
-  }
-
-  normalizeIcon (icon) {
-    return icon.substring(1, icon.length - 2)
+    `
   }
 })
